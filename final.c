@@ -245,8 +245,8 @@ void display()
 
     glEnable(GL_NORMALIZE);
 
-    //float light0Position[] = {5*dim, dim/2, -5*dim, 1.0};
-    float light0Position[] = {0, 0, 0, 1.0};
+    float light0Position[] = {5*dim, dim/2, -5*dim, 1.0};
+    //float light0Position[] = {0, 0, 0, 1.0};
 
     //make sphere at position of light
     glColor4f(1,1,1,1);
@@ -401,7 +401,7 @@ void generateDisplayLists()
     //back aisles
 
     drawAisleCompartment(605,150, insideArchTextures, woodTexture);
-    drawAisleCompartment(820,150, insideArchTextures, woodTexture);
+    drawAisleCompartment(825,150, insideArchTextures, woodTexture);
 
     //doors on crossing
     aboveArch(-260, -10, 300, 4,2,1, 180, 55,35, 2.5, insideArchTextures);
@@ -440,8 +440,8 @@ void generateDisplayLists()
     tower(-260.1,-10.1,-875, 220,500,475,150, 0, insideArchTextures[0],outsideArchTextures[1]);
     //back towers
     tower(0,-10,1180, 300,675,400,250, 0, insideArchTextures[0],outsideArchTextures[1]);
-    tower(260.1,-10.1,1180, 220,675,300,300, 0, insideArchTextures[0],outsideArchTextures[1]);
-    tower(-260.1,-10.1,1180, 220,675,300,300, 0, insideArchTextures[0],outsideArchTextures[1]);
+    tower(260.1,-10.1,1185, 220,675,300,300, 0, insideArchTextures[0],outsideArchTextures[1]);
+    tower(-260.1,-10.1,1185, 220,675,300,300, 0, insideArchTextures[0],outsideArchTextures[1]);
     //left tower
     tower(640,-10.1,450, 350,675,300,100, 90, insideArchTextures[0],outsideArchTextures[1]);
     //right tower
