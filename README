@@ -6,6 +6,10 @@ This program draws a cathedral in 3d with lighting and textures enabled. The
 user is able to choose between automatic light movement (circular) and manual
 light movement.
 
+NOTE: CSCIx229.h, errcheck.c, fatal.c, loadtexbmp.c, object.c, print.c, and project.c (all files used by CSCIx229.h) were not written by me.
+They were provided as a part of the CSCI 4229 course at CU Boulder. Additionally, some of the other code (some in final.c, some in Cathedral.c,
+and most of the makefile) was copied from in-class examples.
+
 -----
 Key bindings:
     Up arrow - increase elevation angle
