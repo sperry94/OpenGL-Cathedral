@@ -1,0 +1,43 @@
+Name: Seth Perry
+Course: CSCI 4229-Computer Graphics
+Assignment 6 - Light/Texture Assignment
+
+This program draws a cathedral in 3d with lighting and textures enabled. The
+user is able to choose between automatic light movement (circular) and manual
+light movement.
+
+-----
+Key bindings:
+    Up arrow - increase elevation angle
+    Down arrow - decrease elevation angle
+
+    Right arrow - increase azimuth angle
+    Left arrow - decrease azimuth angle
+
+    [ - Zoom out (ONLY IF NOT IN FIRST PERSON)
+    ] - Zoom in (ONLY IF NOT IN FIRST PERSON)
+
+    1 - Fixed point perspective projection
+    2 - First person projection
+
+    4 - reset angles
+    5 - reset zoom
+    6 - reset first person location
+
+    w/W - move forward in first person mode
+    a/A - move left in first person mode
+    s/S - move right in first person mode
+    d/D - move backward in first person mode
+
+    i/I - Change light mode (automatic/manual)
+    o/O - Stop light (automatic)
+
+    j - decrease x coordinate of light (manual mode only)
+    J - increase x coordinate of light (manual mode only)
+    k - decrease y coordinate of light
+    K - increase y coordinate of light
+    l - decrease z coordinate of light (manual mode only)
+    L - increase z coordinate of light (manual mode only)
+
+    esc - exit
+-----

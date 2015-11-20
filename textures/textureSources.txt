@@ -1,0 +1,13 @@
+Sources:
+
+cathedralCeiling.bmp - self
+groundTexture.bmp - http://www.outworldz.com/SeamlessTextures/master/Grass/grass-dark.png
+roofTexture.bmp - http://texturelib.com/Textures/roof/roof_0054_01_preview.jpg
+skySide.bmp - https://labs.gooengine.com/examples/resources/skybox/skyboxsun5deg2.png
+skyTop.bmp - https://labs.gooengine.com/examples/resources/skybox/skyboxsun5deg2.png
+wallTexture.bmp - http://pre12.deviantart.net/88ca/th/pre/i/2011/258/a/3/stone_texture_10___seamless_by_agf81-d49w3l3.jpg
+woodTexture.bmp - http://allroundnews.com/wp-content/uploads/2012/02/seamless-wood-texture-free-40.jpg
+marbleTexture.bmp - http://3.bp.blogspot.com/-RKgFd111eBA/T2HQ4K95NhI/AAAAAAAABMw/Aqdq3tJevvc/s1600/Seamless+marble+texture+%252812%2529.jpg
+insideGroundTexture.bmp - http://3.bp.blogspot.com/-lErf17Ara5U/UmpPG_CIUXI/AAAAAAAAEx8/cWhkFYzxqk0/s1600/Tileable+marble+floor+tile+texture+(18).jpg
+stainedGlassTexture.bmp - https://upload.wikimedia.org/wikipedia/commons/c/cb/Saint_Anthony_Catholic_Church_(Hillsdale,_Michigan),_interior,_stained_glass,_crowns_window.jpg
+tileTexture.bmp - http://pre09.deviantart.net/528a/th/pre/i/2011/336/c/9/seamless_marble_tile_texture_by_hhh316-d4hzszw.jpg
