@@ -6,6 +6,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
 
 //library from class
 #include "CSCIx229.h"
@@ -43,6 +44,13 @@ unsigned int stainedGlassTexture;
 unsigned int groundTexture;
 unsigned int tileTexture;
 
+int hourOfDay = 0;
+float skyColor[]={0,0,0,1};
+//Colors of sky based on time of day from http://www.designboom.com/cms/images/andrea08/timesky07.jpg
+float skyRValues[] = {0.027,0.051,0.059,0.063,0.102,0.129,0.215,0.328,0.543,0.688,0.637,0.582,0.539,0.504,0.430,0.366,0.344,0.285,0.156,0.117,0.066,0.059,0.055,0.055};
+float skyGValues[] = {0.031,0.066,0.074,0.102,0.148,0.227,0.367,0.547,0.770,0.860,0.816,0.766,0.711,0.648,0.570,0.508,0.391,0.316,0.184,0.125,0.074,0.059,0.059,0.055};
+float skyBValues[] = {0.039,0.105,0.133,0.184,0.301,0.477,0.656,0.797,0.918,0.957,0.934,0.906,0.883,0.844,0.773,0.711,0.660,0.629,0.492,0.320,0.180,0.130,0.074,0.051};
+
 
 int numTrees = 100;
 double treeLocations[100][2];
@@ -65,6 +73,27 @@ void checkOffsets()
         zOffset = 2000;
     else if(zOffset < -2000)
         zOffset = -2000;
+}
+
+void getHourOfDay()
+{
+    //http://www.tutorialspoint.com/c_standard_library/time_h.htm used as reference
+
+    time_t currentTime;
+    time(&currentTime);
+
+    struct tm *utcTime;
+
+    utcTime = localtime(&currentTime);
+
+    hourOfDay = utcTime->tm_hour;
+}
+
+void setSkyColor()
+{
+    skyColor[0] = skyRValues[hourOfDay];
+    skyColor[1] = skyGValues[hourOfDay];
+    skyColor[2] = skyBValues[hourOfDay];
 }
 
 //Used to assign actions to keyboard presses.
@@ -210,11 +239,15 @@ void determineTreeLocations()
 }
 
 void idle()
-{}
+{
+    getHourOfDay();
+    setSkyColor();
+}
 
 //Used to display the scene.
 void display()
 {
+    glClearColor(skyColor[0],skyColor[1],skyColor[2],skyColor[3]);
 
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
@@ -249,14 +282,11 @@ void display()
     //float light0Position[] = {0, 0, 0, 1.0};
 
     //make sphere at position of light
-    glColor4f(1,1,1,1);
     sphere(light0Position[0], light0Position[1], light0Position[2], 10,10,10);
 
     //enable textures
     glEnable(GL_TEXTURE_2D);
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-
-    sky(5*dim,skyTextures);
 
     //enable lighting
     glEnable(GL_LIGHTING);
@@ -509,6 +539,8 @@ int main(int argc,char* argv[])
     glutSpecialFunc(special);
     //sets the keyboard function to key
     glutKeyboardFunc(key);
+
+    getHourOfDay();
 
     loadTextures();
 

@@ -206,47 +206,6 @@ void tower(double x, double y, double z, double xScale, double yScaleCube, doubl
     pyramid(x,y+yScaleCube,z, xScale,yScalePyramid,zScale, rotateAngle, pyramidTexture);
 }
 
-void sky(double size, unsigned int *textures)
-{
-    glBindTexture(GL_TEXTURE_2D, textures[0]);
-    // sky top
-    glBegin(GL_QUADS);
-    glTexCoord2f(0.0,1.0);
-    glVertex3f(-size,size,-size);
-    glTexCoord2f(0.0,0.0);
-    glVertex3f(-size,size,size);
-    glTexCoord2f(0.5,0.0);
-    glVertex3f(size,size,size);
-    glTexCoord2f(0.5,1.0);
-    glVertex3f(size,size,-size);
-    glEnd();
-
-    glBindTexture(GL_TEXTURE_2D, textures[1]);
-    // sides
-    glBegin(GL_QUAD_STRIP);
-    glTexCoord2f(0.0,0.0);
-    glVertex3f(-size,-size,-size);
-    glTexCoord2f(0.0,1.0);
-    glVertex3f(-size,size,-size);
-    glTexCoord2f(0.25,0.0);
-    glVertex3f(-size,-size,size);
-    glTexCoord2f(0.25,1.0);
-    glVertex3f(-size,size,size);
-    glTexCoord2f(0.50,0.0);
-    glVertex3f(size,-size,size);
-    glTexCoord2f(0.50,1.0);
-    glVertex3f(size,size,size);
-    glTexCoord2f(0.75,0.0);
-    glVertex3f(size,-size,-size);
-    glTexCoord2f(0.75,1.0);
-    glVertex3f(size,size,-size);
-    glTexCoord2f(1.0,0.0);
-    glVertex3f(-size,-size,-size);
-    glTexCoord2f(1.0,1.0);
-    glVertex3f(-size,size,-size);
-    glEnd();
-}
-
 /*  Draw a white sphere */
 void sphere(double x, double y, double z, double xScale, double yScale, double zScale)
 {

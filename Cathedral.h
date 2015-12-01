@@ -34,8 +34,6 @@ void tower(double x, double y, double z, double xScale, double yScaleCube, doubl
 
 void archCustom(double x, double y, double z, double xScale, double yScale, double zScale, double rotateAngle, double depth, double pillarHeight, double connectionLength, unsigned int *textures);
 
-void sky(double size,unsigned int *textures);
-
 void adjustList(double x, double y, double z, double xScale, double yScale, double zScale, double rotateAngle, GLuint displayList);
 
 void door(double x, double y, double z, double xScale, double yScale, double zScale, double rotateAngle, double pillarHeight, unsigned int texture);
