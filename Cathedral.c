@@ -206,21 +206,15 @@ void tower(double x, double y, double z, double xScale, double yScaleCube, doubl
     pyramid(x,y+yScaleCube,z, xScale,yScalePyramid,zScale, rotateAngle, pyramidTexture);
 }
 
-/*  Draw a white sphere */
+/*  Draw a sphere */
 void sphere(double x, double y, double z, double xScale, double yScale, double zScale)
 {
     double az;
     double el;
 
-    float white[] = {1.0,1.0,1.0,1.0};
-    float black[] = {0.0,0.0,0.0,1.0};
-
     glPushMatrix();
     glTranslated(x, y, z);
     glScaled(xScale, yScale, zScale);
-    glColor3f(1,1,1);
-    glMaterialfv(GL_FRONT_AND_BACK,GL_EMISSION,white);
-    glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR,black);
     for(el = -90.0; el < 90; el+=0.5)
     {
         glBegin(GL_QUAD_STRIP);

@@ -47,6 +47,7 @@ unsigned int tileTexture;
 int outside = 0;
 
 int hourOfDay = 0;
+int timeDayOffset = 0;
 float skyColor[]={0,0,0,1};
 //Colors of sky based on time of day from http://www.designboom.com/cms/images/andrea08/timesky07.jpg
 float skyRValues[] = {0.027,0.051,0.059,0.063,0.102,0.129,0.215,0.328,0.543,0.688,0.637,0.582,0.539,0.504,0.430,0.366,0.344,0.285,0.156,0.117,0.066,0.059,0.055,0.055};
@@ -77,6 +78,8 @@ void checkOffsets()
             zOffset = 2000;
         else if(zOffset < -2000)
             zOffset = -2000;
+
+        //CHECK FOR ENTERING CATHEDRAL AGAIN
     }
 
     if(!outside)
@@ -130,9 +133,9 @@ void getHourOfDay()
 
 void setSkyColor()
 {
-    skyColor[0] = skyRValues[hourOfDay];
-    skyColor[1] = skyGValues[hourOfDay];
-    skyColor[2] = skyBValues[hourOfDay];
+    skyColor[0] = skyRValues[(hourOfDay+timeDayOffset)%24];
+    skyColor[1] = skyGValues[(hourOfDay+timeDayOffset)%24];
+    skyColor[2] = skyBValues[(hourOfDay+timeDayOffset)%24];
 }
 
 //Used to assign actions to keyboard presses.
@@ -176,6 +179,10 @@ void key(unsigned char ch,int x,int y)
         zOffset = -600;
         outside = 0;
     }
+    else if(ch == '7')
+    {
+        timeDayOffset=0;
+    }
     //exit using esc
     else if(ch == 27)
         exit(0);
@@ -209,6 +216,14 @@ void key(unsigned char ch,int x,int y)
         xOffset += 20*Sin(th-90);
         zOffset -= 20*Cos(th-90);
         checkOffsets();
+    }
+    else if(ch == 't' || ch == 'T')
+    {
+        --timeDayOffset;
+    }
+    else if(ch == 'y' || ch == 'Y')
+    {
+        ++timeDayOffset;
     }
     //ensures dimension is never too small to fit arch.
     if(dim < 0)
@@ -320,7 +335,7 @@ void display()
 
     glEnable(GL_NORMALIZE);
 
-    int relativeTime = ((hourOfDay-6)%12)*3.1415926/11;
+    float relativeTime = (((hourOfDay+timeDayOffset)%24-6)%12)*3.1415926/11;
 
     float light0Position[] = {0,0,0,1.0};
     float light1Position[] = {-5*dim, dim, -5*dim, 1.0};
@@ -339,7 +354,14 @@ void display()
 
     //make sphere at position of light
     if(outside)
+    {
+        int offsetTime = (hourOfDay+timeDayOffset)%24;
+        if(offsetTime >=6 && offsetTime <=17)
+            glColor4f(1,1,1,1);
+        else
+            glColor4f(0.5,0.5,0.5,1);
         sphere(light0Position[0], light0Position[1], light0Position[2], 100,100,100);
+    }
 
     //enable textures
     glEnable(GL_TEXTURE_2D);
@@ -419,6 +441,8 @@ void display()
         glWindowPos2i(5,25);
         Print("User Location: { %.3f, %.3f, %.3f }", xOffset, yOffset, zOffset);
     }
+    glWindowPos2i(5,45);
+    Print("Time (hrs): %d",(hourOfDay+timeDayOffset)%24);
 
     //check for errors
     ErrCheck("display");
