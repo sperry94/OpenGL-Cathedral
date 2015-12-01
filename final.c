@@ -82,11 +82,11 @@ void getHourOfDay()
     time_t currentTime;
     time(&currentTime);
 
-    struct tm *utcTime;
+    struct tm *currentLocalTime;
 
-    utcTime = localtime(&currentTime);
+    currentLocalTime = localtime(&currentTime);
 
-    hourOfDay = utcTime->tm_hour;
+    hourOfDay = currentLocalTime->tm_hour;
 }
 
 void setSkyColor()
@@ -278,11 +278,13 @@ void display()
 
     glEnable(GL_NORMALIZE);
 
-    float light0Position[] = {5*dim, dim/2, -5*dim, 1.0};
+    int relativeTime = ((hourOfDay-6)%12)*3.1415926/11;
+
+    float light0Position[] = {0, 5*dim*sin(relativeTime), 5*dim*cos(relativeTime), 1.0};
     //float light0Position[] = {0, 0, 0, 1.0};
 
     //make sphere at position of light
-    sphere(light0Position[0], light0Position[1], light0Position[2], 10,10,10);
+    sphere(light0Position[0], light0Position[1], light0Position[2], 100,100,100);
 
     //enable textures
     glEnable(GL_TEXTURE_2D);
