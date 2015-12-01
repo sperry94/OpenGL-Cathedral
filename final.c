@@ -44,6 +44,8 @@ unsigned int stainedGlassTexture;
 unsigned int groundTexture;
 unsigned int tileTexture;
 
+int outside = 0;
+
 int hourOfDay = 0;
 float skyColor[]={0,0,0,1};
 //Colors of sky based on time of day from http://www.designboom.com/cms/images/andrea08/timesky07.jpg
@@ -65,14 +67,51 @@ GLuint floorList;
 
 void checkOffsets()
 {
-    if(xOffset > 2000)
-        xOffset = 2000;
-    else if(xOffset < -2000)
-        xOffset = -2000;
-    if(zOffset > 2000)
-        zOffset = 2000;
-    else if(zOffset < -2000)
-        zOffset = -2000;
+    if(outside)
+    {
+        if(xOffset > 2000)
+            xOffset = 2000;
+        else if(xOffset < -2000)
+            xOffset = -2000;
+        if(zOffset > 2000)
+            zOffset = 2000;
+        else if(zOffset < -2000)
+            zOffset = -2000;
+    }
+
+    if(!outside)
+    {
+        if(zOffset > 590)
+            zOffset = 590;
+
+        if(zOffset >= -780 && zOffset <= 300 && xOffset > 350)
+            xOffset = 350;
+        else if(zOffset >= -780 && zOffset <= 300 && xOffset < -350)
+            xOffset = -350;
+        else if(zOffset > 300 && zOffset <= 590 && xOffset > 555)
+            xOffset = 555;
+        else if(zOffset > 300 && zOffset <= 590 && xOffset < -555)
+            xOffset = -555;
+        else if(zOffset <= -780 && xOffset > 135)
+            xOffset = 135;
+        else if(zOffset <= -780 && xOffset < -135)
+            xOffset = -135;
+
+        if(xOffset > 350 && xOffset <= 560 && zOffset < 310)
+            zOffset = 310;
+        else if(xOffset < -350 && xOffset >= -560 && zOffset < 310)
+            zOffset = 310;
+        else if(xOffset > 135 && zOffset < -780)
+            zOffset = -780;
+        else if(xOffset < -135 && zOffset < -780)
+            zOffset = -780;
+
+        if(zOffset < -950)
+        {
+            outside = 1;
+        }
+    }
+
 }
 
 void getHourOfDay()
@@ -106,6 +145,7 @@ void key(unsigned char ch,int x,int y)
         dim = 860;
         th = 0;
         ph = 0;
+        outside=1;
     }
     //change the mode of viewing the scene
     else if(ch == '2')
@@ -116,7 +156,8 @@ void key(unsigned char ch,int x,int y)
         ph = 0;
         xOffset = 0;
         yOffset = 0;
-        zOffset = -1500;
+        zOffset = -600;
+        outside=0;
     }
     //reset angle using 4
     if(ch == '4')
@@ -132,7 +173,8 @@ void key(unsigned char ch,int x,int y)
     {
         xOffset = 0;
         yOffset = 0;
-        zOffset = -1500;
+        zOffset = -600;
+        outside = 0;
     }
     //exit using esc
     else if(ch == 27)
@@ -280,11 +322,24 @@ void display()
 
     int relativeTime = ((hourOfDay-6)%12)*3.1415926/11;
 
-    float light0Position[] = {0, 5*dim*sin(relativeTime), 5*dim*cos(relativeTime), 1.0};
-    //float light0Position[] = {0, 0, 0, 1.0};
+    float light0Position[] = {0,0,0,1.0};
+    float light1Position[] = {-5*dim, dim, -5*dim, 1.0};
+
+    if(outside)
+    {
+        light0Position[1]=5*dim*sin(relativeTime);
+        light0Position[2]=5*dim*cos(relativeTime);
+    }
+    else
+    {
+        light0Position[0]=5*dim;
+        light0Position[1]=dim;
+        light0Position[2]=5*dim;
+    }
 
     //make sphere at position of light
-    sphere(light0Position[0], light0Position[1], light0Position[2], 100,100,100);
+    if(outside)
+        sphere(light0Position[0], light0Position[1], light0Position[2], 100,100,100);
 
     //enable textures
     glEnable(GL_TEXTURE_2D);
@@ -305,6 +360,14 @@ void display()
     //set ambient and diffuse components of light 0
     glLightfv(GL_LIGHT0,GL_AMBIENT ,Ambient);
     glLightfv(GL_LIGHT0,GL_DIFFUSE ,Diffuse);
+
+    if(!outside)
+    {
+        glLightfv(GL_LIGHT1,GL_POSITION,light1Position);
+        glEnable(GL_LIGHT1);
+        glLightfv(GL_LIGHT1,GL_AMBIENT ,Ambient);
+        glLightfv(GL_LIGHT1,GL_DIFFUSE ,Diffuse);
+    }
 
     //make arches
     glCallList(cathedralList);
@@ -467,7 +530,7 @@ void generateDisplayLists()
     towerList = glGenLists(1);
     glNewList(towerList, GL_COMPILE);
     //front towers
-    tower(0,-10.1,-950, 300,675,400,100, 0, insideArchTextures[0],outsideArchTextures[1]);
+    tower(0,-10.1,-900, 300,675,400,100, 0, insideArchTextures[0],outsideArchTextures[1]);
     tower(260.1,-10.1,-875, 220,500,475,150, 0, insideArchTextures[0],outsideArchTextures[1]);
     tower(-260.1,-10.1,-875, 220,500,475,150, 0, insideArchTextures[0],outsideArchTextures[1]);
     //back towers
@@ -504,13 +567,13 @@ void generateDisplayLists()
     glBegin(GL_QUADS);
     glNormal3d(0,1,0);
     glTexCoord2f(0.0,0.0);
-    glVertex3d(-370.0,-9.9,-900.0);
+    glVertex3d(-370.0,-9.9,-950.0);
     glTexCoord2f(0.0,193.5);
     glVertex3d(-370.0,-9.9,1035.0);
     glTexCoord2f(74.0,193.5);
     glVertex3d(370.0,-9.9,1035.0);
     glTexCoord2f(74.0,0.0);
-    glVertex3d(370.0,-9.9,-900.0);
+    glVertex3d(370.0,-9.9,-950.0);
 
     glNormal3d(0,1,0);
     glTexCoord2f(0.0,0.0);
