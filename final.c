@@ -33,8 +33,9 @@ double dim=860.0;
 //first person location
 double xOffset = 0;
 double yOffset = 0;
-double zOffset = -600;
+double zOffset = -1600;
 
+//variables to hold textures
 unsigned int insideArchTextures[2];
 unsigned int outsideArchTextures[2];
 unsigned int skyTextures[2];
@@ -44,8 +45,10 @@ unsigned int stainedGlassTexture;
 unsigned int groundTexture;
 unsigned int tileTexture;
 
-int outside = 0;
+//used to designate whether user is inside or outside
+int outside = 1;
 
+//variables used in time of day lighting features
 int hourOfDay = 0;
 int minOfHr = 0;
 int minHrOffset = 0;
@@ -56,10 +59,11 @@ float skyRValues[] = {0.027,0.051,0.059,0.063,0.102,0.129,0.215,0.328,0.543,0.68
 float skyGValues[] = {0.031,0.066,0.074,0.102,0.148,0.227,0.367,0.547,0.770,0.860,0.816,0.766,0.711,0.648,0.570,0.508,0.391,0.316,0.184,0.125,0.074,0.059,0.059,0.055};
 float skyBValues[] = {0.039,0.105,0.133,0.184,0.301,0.477,0.656,0.797,0.918,0.957,0.934,0.906,0.883,0.844,0.773,0.711,0.660,0.629,0.492,0.320,0.180,0.130,0.074,0.051};
 
-
+//variables used for tree placement
 int numTrees = 100;
 double treeLocations[100][2];
 
+//variables to hold display lists
 GLuint treeList;
 GLuint cathedralList;
 GLuint towerList;
@@ -68,6 +72,7 @@ GLuint naveAisleList;
 GLuint pew;
 GLuint floorList;
 
+//used to do basic collision detection
 void checkOffsets()
 {
     if(outside)
@@ -116,9 +121,17 @@ void checkOffsets()
             outside = 1;
         }
     }
+    else
+    {
+        if(zOffset > -950 && xOffset >= -350 && xOffset <= 350)
+        {
+            outside = 0;
+        }
+    }
 
 }
 
+//used to collect the hour of day for lighting
 void getHourOfDay()
 {
     //http://www.tutorialspoint.com/c_standard_library/time_h.htm used as reference
@@ -134,6 +147,7 @@ void getHourOfDay()
     minOfHr = currentLocalTime->tm_min;
 }
 
+//used to set the color of the sky based on the time of day
 void setSkyColor()
 {
     int relativeHr = hourOfDay+hrDayOffset;
@@ -165,8 +179,8 @@ void key(unsigned char ch,int x,int y)
         ph = 0;
         xOffset = 0;
         yOffset = 0;
-        zOffset = -600;
-        outside=0;
+        zOffset = -1600;
+        outside=1;
     }
     //reset angle using 4
     if(ch == '4')
@@ -182,8 +196,8 @@ void key(unsigned char ch,int x,int y)
     {
         xOffset = 0;
         yOffset = 0;
-        zOffset = -600;
-        outside = 0;
+        zOffset = -1600;
+        outside = 1;
     }
     else if(ch == '7')
     {
@@ -299,6 +313,7 @@ void reshape(int width,int height)
     Project(fov,asp,dim);
 }
 
+//called to determine random tree locations
 void determineTreeLocations()
 {
     int numTreesPerQuadrant = numTrees/4;
@@ -325,6 +340,7 @@ void determineTreeLocations()
     }
 }
 
+//called when GLUT is idle
 void idle()
 {
     getHourOfDay();
@@ -423,6 +439,9 @@ void display()
         glLightfv(GL_LIGHT1,GL_AMBIENT ,Ambient);
         glLightfv(GL_LIGHT1,GL_DIFFUSE ,Diffuse);
     }
+    else{
+        glDisable(GL_LIGHT1);
+    }
 
     //make arches
     glCallList(cathedralList);
@@ -489,6 +508,7 @@ void display()
     glutSwapBuffers();
 }
 
+//used to load textures into variables
 void loadTextures()
 {
     //load textures
@@ -509,6 +529,7 @@ void loadTextures()
     tileTexture = LoadTexBMP("textures/tileTexture.bmp");
 }
 
+//used to generate display lists
 void generateDisplayLists()
 {
     treeList = glGenLists(1);
@@ -591,9 +612,14 @@ void generateDisplayLists()
     towerList = glGenLists(1);
     glNewList(towerList, GL_COMPILE);
     //front towers
-    tower(0,-10.1,-900, 300,675,400,100, 0, insideArchTextures[0],outsideArchTextures[1]);
+    tower(0,265,-900, 300,400,400,100, 0, insideArchTextures[0],outsideArchTextures[1]);
     tower(260.1,-10.1,-875, 220,500,475,150, 0, insideArchTextures[0],outsideArchTextures[1]);
     tower(-260.1,-10.1,-875, 220,500,475,150, 0, insideArchTextures[0],outsideArchTextures[1]);
+    archCustom(0,-250,-900, 5,2,1, 0, 100,200, 0, insideArchTextures);
+    aboveArch(0, -10, -850, 5,2,1, 0, 80,27.5, 5, insideArchTextures);
+    aboveArch(0, -10, -950, 5,2,1, 180, 80,27.5, 5, insideArchTextures);
+    door(0, -10, -850, 5,2,1, 0, 80, woodTexture);
+    door(0, -10, -950, 5,2,1, 180, 80, woodTexture);
     //back towers
     tower(0,-10,1180, 300,675,400,250, 0, insideArchTextures[0],outsideArchTextures[1]);
     tower(260.1,-10.1,1185, 220,675,300,300, 0, insideArchTextures[0],outsideArchTextures[1]);
