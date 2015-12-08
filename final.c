@@ -47,7 +47,9 @@ unsigned int tileTexture;
 int outside = 0;
 
 int hourOfDay = 0;
-int timeDayOffset = 0;
+int minOfHr = 0;
+int minHrOffset = 0;
+int hrDayOffset = 0;
 float skyColor[]={0,0,0,1};
 //Colors of sky based on time of day from http://www.designboom.com/cms/images/andrea08/timesky07.jpg
 float skyRValues[] = {0.027,0.051,0.059,0.063,0.102,0.129,0.215,0.328,0.543,0.688,0.637,0.582,0.539,0.504,0.430,0.366,0.344,0.285,0.156,0.117,0.066,0.059,0.055,0.055};
@@ -129,13 +131,17 @@ void getHourOfDay()
     currentLocalTime = localtime(&currentTime);
 
     hourOfDay = currentLocalTime->tm_hour;
+    minOfHr = currentLocalTime->tm_min;
 }
 
 void setSkyColor()
 {
-    skyColor[0] = skyRValues[(hourOfDay+timeDayOffset)%24];
-    skyColor[1] = skyGValues[(hourOfDay+timeDayOffset)%24];
-    skyColor[2] = skyBValues[(hourOfDay+timeDayOffset)%24];
+    int relativeHr = hourOfDay+hrDayOffset;
+    float relativeMin = minOfHr+minHrOffset;
+
+    skyColor[0] = skyRValues[relativeHr%24]+(relativeMin/60)*(skyRValues[(relativeHr+1)%24]-skyRValues[relativeHr%24]);
+    skyColor[1] = skyGValues[relativeHr%24]+(relativeMin/60)*(skyGValues[(relativeHr+1)%24]-skyGValues[relativeHr%24]);
+    skyColor[2] = skyBValues[relativeHr%24]+(relativeMin/60)*(skyBValues[(relativeHr+1)%24]-skyBValues[relativeHr%24]);
 }
 
 //Used to assign actions to keyboard presses.
@@ -181,7 +187,7 @@ void key(unsigned char ch,int x,int y)
     }
     else if(ch == '7')
     {
-        timeDayOffset=0;
+        minHrOffset=0;
     }
     //exit using esc
     else if(ch == 27)
@@ -219,11 +225,35 @@ void key(unsigned char ch,int x,int y)
     }
     else if(ch == 't' || ch == 'T')
     {
-        --timeDayOffset;
+        minHrOffset-=5;
+        if(minHrOffset < -minOfHr)
+            minHrOffset = -minOfHr;
     }
     else if(ch == 'y' || ch == 'Y')
     {
-        ++timeDayOffset;
+        minHrOffset+=5;
+        if(minHrOffset > (59-minOfHr))
+            minHrOffset = (59-minOfHr);
+    }
+    else if(ch == 'g' || ch == 'G')
+    {
+        hrDayOffset--;
+        if(hrDayOffset < 0)
+            hrDayOffset = 0;
+    }
+    else if(ch == 'h' || ch == 'H')
+    {
+        hrDayOffset++;
+        if(hrDayOffset > 24)
+            hrDayOffset = 24;
+    }
+    else if(ch == 'u' || ch == 'U')
+    {
+        minHrOffset = 0;
+    }
+    else if(ch == 'j' || ch == 'J')
+    {
+        hrDayOffset = 0;
     }
     //ensures dimension is never too small to fit arch.
     if(dim < 0)
@@ -335,7 +365,10 @@ void display()
 
     glEnable(GL_NORMALIZE);
 
-    float relativeTime = (((hourOfDay+timeDayOffset)%24-6)%12)*3.1415926/11;
+    float hrMin = minOfHr+minHrOffset;
+    float dayHr = (hourOfDay+hrDayOffset-6)%12;
+
+    float relativeTime = (dayHr + hrMin/60)*3.1415926/11;
 
     float light0Position[] = {0,0,0,1.0};
     float light1Position[] = {-5*dim, dim, -5*dim, 1.0};
@@ -355,7 +388,7 @@ void display()
     //make sphere at position of light
     if(outside)
     {
-        int offsetTime = (hourOfDay+timeDayOffset)%24;
+        int offsetTime = (hourOfDay+minHrOffset)%24;
         if(offsetTime >=6 && offsetTime <=17)
             glColor4f(1,1,1,1);
         else
@@ -441,8 +474,12 @@ void display()
         glWindowPos2i(5,25);
         Print("User Location: { %.3f, %.3f, %.3f }", xOffset, yOffset, zOffset);
     }
+    glWindowPos2i(5,65);
+    Print("Time: %.2d:%.2d",hourOfDay,minOfHr);
     glWindowPos2i(5,45);
-    Print("Time (hrs): %d",(hourOfDay+timeDayOffset)%24);
+    Print("Offset Time: %.2d:%.2d",(int)(hourOfDay+hrDayOffset)%12,(int)hrMin);
+    glWindowPos2i(5,85);
+    Print("Time Offset: %d",minHrOffset);
 
     //check for errors
     ErrCheck("display");
