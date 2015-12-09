@@ -511,8 +511,6 @@ void display()
     Print("Time: %.2d:%.2d",hourOfDay,minOfHr);
     glWindowPos2i(5,45);
     Print("Offset Time: %.2d:%.2d",(int)(hourOfDay+hrDayOffset)%12,(int)hrMin);
-    glWindowPos2i(5,85);
-    Print("Time Offset: %d",minHrOffset);
 
     //check for errors
     ErrCheck("display");
