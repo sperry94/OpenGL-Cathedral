@@ -470,7 +470,7 @@ void aboveArch(double x, double y, double z, double xScale, double yScale, doubl
     glPopMatrix();
 }
 
-void drawStainedGlass(unsigned int stainedGlassTexture)
+void drawStainedGlass(unsigned int stainedGlassTexture, unsigned int stainedGlassTexture2)
 {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
@@ -487,6 +487,9 @@ void drawStainedGlass(unsigned int stainedGlassTexture)
             i = 385;
         }
     }
+
+    door(0, 275, -850, 5,2,1, 0, 80, stainedGlassTexture2);
+    door(0, 275, -950, 5,2,1, 180, 80, stainedGlassTexture2);
 }
 
 void drawAisleCompartment(double startZ, double insideX, unsigned int *archTextures, unsigned int doorTexture)

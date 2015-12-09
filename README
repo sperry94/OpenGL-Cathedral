@@ -2,7 +2,7 @@ Name: Seth Perry
 Course: CSCI 4229-Computer Graphics
 Final Project
 
-This program draws a cathedral in 3d with lighting (light location and sky color based on time of day) and textures enabled. To run this program, simply compile it using the makefile and then run ./final. The key bindings listed below can be used to manipulate the program. NOTE: TO EXIT THE CATHEDRAL IN FIRST PERSON, GO THROUGH THE WALL ON THE OPPOSITE END FROM THE ALTAR!
+This program draws a cathedral in 3d with lighting (light location and sky color based on time of day) and textures enabled. To run this program, simply compile it using the makefile and then run ./final. The key bindings listed below can be used to manipulate the program. NOTE: TO EXIT THE CATHEDRAL IN FIRST PERSON, GO THROUGH THE DOORS ON THE OPPOSITE END FROM THE ALTAR!
 
 NOTE: CSCIx229.h, errcheck.c, fatal.c, loadtexbmp.c, object.c, print.c, and project.c (all files used by CSCIx229.h) were not written by me.
 They were provided as a part of the CSCI 4229 course at CU Boulder. Additionally, some of the other code (some in final.c, some in Cathedral.c, and most of the makefile) was copied from in-class examples.
@@ -29,6 +29,14 @@ Key bindings:
     a/A - move left in first person mode
     s/S - move right in first person mode
     d/D - move backward in first person mode
+
+    t/T - decrease time offset by 1hr (between 0 and 24)
+    y/Y - increase time offset by 1hr (between 0 and 24)
+    u/U - reset hrs of time offset
+
+    g/G - decrease time offset by 1 min (only within current hour)
+    h/H - increase time offset by 1 min (only within current hour)
+    j/J - reset mins of time offset
 
     esc - exit
 -----

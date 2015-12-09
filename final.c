@@ -42,6 +42,7 @@ unsigned int skyTextures[2];
 unsigned int altarTexture;
 unsigned int woodTexture;
 unsigned int stainedGlassTexture;
+unsigned int stainedGlassTexture2;
 unsigned int groundTexture;
 unsigned int tileTexture;
 
@@ -71,6 +72,7 @@ GLuint pewList;
 GLuint naveAisleList;
 GLuint pew;
 GLuint floorList;
+GLuint crossList;
 
 //used to do basic collision detection
 void checkOffsets()
@@ -117,16 +119,26 @@ void checkOffsets()
             zOffset = -780;
 
         if(zOffset < -950)
-        {
             outside = 1;
-        }
     }
     else
     {
-        if(zOffset > -950 && xOffset >= -350 && xOffset <= 350)
-        {
+
+        if(zOffset > 260)
+            zOffset = 260;
+
+        if(xOffset < 380 && xOffset >= 110 && zOffset > -965)
+            zOffset = -965;
+        else if(xOffset > -380 && xOffset <= -110 && zOffset > -965)
+            zOffset = -965;
+
+        if(xOffset > -415 && xOffset < -200 && zOffset > -965)
+            xOffset = -415;
+        else if(xOffset < 415 && xOffset > 200 && zOffset > -965)
+            xOffset = 415;
+
+        if(zOffset > -950 && xOffset > -110 && xOffset < 110)
             outside = 0;
-        }
     }
 
 }
@@ -454,6 +466,8 @@ void display()
 
     glCallList(floorList);
 
+    glCallList(crossList);
+
     glColor4f(0.0,0.75,0.0,1.0);
 
     glBindTexture(GL_TEXTURE_2D, groundTexture);
@@ -474,7 +488,7 @@ void display()
     glVertex3f(5*dim,-10.0,-5*dim);
     glEnd();
 
-    drawStainedGlass(stainedGlassTexture);
+    drawStainedGlass(stainedGlassTexture, stainedGlassTexture2);
 
     glDisable(GL_TEXTURE_2D);
 
@@ -526,6 +540,7 @@ void loadTextures()
     altarTexture = LoadTexBMP("textures/marbleTexture.bmp");
     woodTexture = LoadTexBMP("textures/woodTexture.bmp");
     stainedGlassTexture = LoadTexBMP("textures/stainedGlassTexture.bmp");
+    stainedGlassTexture2 = LoadTexBMP("textures/stainedGlassTexture2.bmp");
     tileTexture = LoadTexBMP("textures/tileTexture.bmp");
 }
 
@@ -612,12 +627,14 @@ void generateDisplayLists()
     towerList = glGenLists(1);
     glNewList(towerList, GL_COMPILE);
     //front towers
-    tower(0,265,-900, 300,400,400,100, 0, insideArchTextures[0],outsideArchTextures[1]);
+    tower(0,515,-900, 300,150,400,100, 0, insideArchTextures[0],outsideArchTextures[1]);
     tower(260.1,-10.1,-875, 220,500,475,150, 0, insideArchTextures[0],outsideArchTextures[1]);
     tower(-260.1,-10.1,-875, 220,500,475,150, 0, insideArchTextures[0],outsideArchTextures[1]);
     archCustom(0,-250,-900, 5,2,1, 0, 100,200, 0, insideArchTextures);
     aboveArch(0, -10, -850, 5,2,1, 0, 80,27.5, 5, insideArchTextures);
     aboveArch(0, -10, -950, 5,2,1, 180, 80,27.5, 5, insideArchTextures);
+    aboveArch(0, 275, -850, 5,2,1, 0, 80,27.5, 5, insideArchTextures);
+    aboveArch(0, 275, -950, 5,2,1, 180, 80,27.5, 5, insideArchTextures);
     door(0, -10, -850, 5,2,1, 0, 80, woodTexture);
     door(0, -10, -950, 5,2,1, 180, 80, woodTexture);
     //back towers
@@ -672,6 +689,12 @@ void generateDisplayLists()
     glTexCoord2f(120.0, 0.0);
     glVertex3d(600.0,-9.9,300.0);
     glEnd();
+    glEndList();
+
+    crossList = glGenLists(1);
+    glNewList(crossList, GL_COMPILE);
+    cube(0,100,1000, 5,100,5, 0,0, woodTexture);
+    cube(0,175,1000, 75,5,5, 0,0, woodTexture);
     glEndList();
 }
 

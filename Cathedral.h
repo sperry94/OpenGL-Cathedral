@@ -42,7 +42,7 @@ void aboveArch(double x, double y, double z, double xScale, double yScale, doubl
 
 void drawAisleCompartment(double startZ, double insideX, unsigned int *archTextures, unsigned int doorTexture);
 
-void drawStainedGlass(unsigned int stainedGlassTexture);
+void drawStainedGlass(unsigned int stainedGlassTexture, unsigned int stainedGlassTexture2);
 
 #ifdef __cplusplus
 }
